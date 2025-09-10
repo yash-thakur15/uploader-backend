@@ -15,13 +15,14 @@ const configureCors = () => {
       const allowedOriginsString =
         process.env.ALLOWED_ORIGINS ||
         process.env.FRONTEND_URL ||
-        "http://localhost:5174";
+        "https://uploader-backend-1-bmy1.onrender.com/";
       const allowedOrigins = allowedOriginsString
         .split(",")
         .map((origin) => origin.trim());
 
       // Add common development origins
       const defaultOrigins = [
+        "https://uploader-backend-1-bmy1.onrender.com/",
         "http://localhost:3000",
         "http://localhost:5173",
         "http://localhost:5174",
