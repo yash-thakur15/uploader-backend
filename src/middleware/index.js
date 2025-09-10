@@ -7,41 +7,7 @@ const morgan = require("morgan");
  */
 const configureCors = () => {
   const corsOptions = {
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-
-      // Get allowed origins from environment variable or use defaults
-      const allowedOriginsString =
-        process.env.ALLOWED_ORIGINS ||
-        process.env.FRONTEND_URL ||
-        "https://uploader-backend-1-bmy1.onrender.com/";
-      const allowedOrigins = allowedOriginsString
-        .split(",")
-        .map((origin) => origin.trim());
-
-      // Add common development origins
-      const defaultOrigins = [
-        "https://uploader-backend-1-bmy1.onrender.com/",
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://localhost:5174",
-      ];
-
-      const allAllowedOrigins = [
-        ...new Set([...allowedOrigins, ...defaultOrigins]),
-      ];
-
-      if (allAllowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        console.warn(
-          `CORS: Origin ${origin} not allowed. Allowed origins:`,
-          allAllowedOrigins
-        );
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: true, // Allow all origins
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
