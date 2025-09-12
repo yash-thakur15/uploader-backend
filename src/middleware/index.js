@@ -148,8 +148,8 @@ const validateFileUpload = (req, res, next) => {
     });
   }
 
-  // Validate file size if provided
-  if (req.body.fileSize) {
+  // Validate file size if provided (skip validation for video files)
+  if (req.body.fileSize && !req.body.contentType.startsWith("video/")) {
     const maxFileSize = parseInt(process.env.MAX_FILE_SIZE) || 32212254720; // 30GB default
     if (req.body.fileSize > maxFileSize) {
       const maxSizeGB = (maxFileSize / (1024 * 1024 * 1024)).toFixed(1);

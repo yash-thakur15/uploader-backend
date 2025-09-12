@@ -248,11 +248,12 @@ const abortMultipartUpload = async (key, uploadId) => {
  * @returns {Object} - Object with partSize and partCount
  */
 const calculateMultipartParams = (fileSize) => {
-  const MIN_PART_SIZE = 5 * 1024 * 1024; // 5MB minimum
-  const MAX_PART_SIZE = 100 * 1024 * 1024; // 100MB maximum
+  const MIN_PART_SIZE = 5 * 1024 * 1024; // 5MB minimum (AWS requirement)
+  const PREFERRED_PART_SIZE = 50 * 1024 * 1024; // 50MB preferred chunk size
+  const MAX_PART_SIZE = 5 * 1024 * 1024 * 1024; // 5GB maximum (AWS limit)
   const MAX_PARTS = 10000; // AWS limit
 
-  let partSize = MIN_PART_SIZE;
+  let partSize = PREFERRED_PART_SIZE;
   let partCount = Math.ceil(fileSize / partSize);
 
   // If we exceed max parts, increase part size
@@ -264,6 +265,12 @@ const calculateMultipartParams = (fileSize) => {
   // Cap part size at maximum
   if (partSize > MAX_PART_SIZE) {
     partSize = MAX_PART_SIZE;
+    partCount = Math.ceil(fileSize / partSize);
+  }
+
+  // Ensure minimum part size (AWS requirement)
+  if (partSize < MIN_PART_SIZE) {
+    partSize = MIN_PART_SIZE;
     partCount = Math.ceil(fileSize / partSize);
   }
 
